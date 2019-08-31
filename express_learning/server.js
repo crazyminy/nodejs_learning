@@ -1,5 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const fs = require("fs");
+const multer = require('multer');
+const upload = multer({dest:'uploads/'});
+
 
 var app = express();
 app.use(bodyParser.urlencoded({extended:false}));
@@ -16,6 +20,17 @@ app.get("/",function(requset,response){
     let params = (requset.query);
     response.send(params);
 }); 
+
+app.get("/fileUpload",function(request,response){
+    console.log(__dirname);
+    let page = fs.readFileSync("./index.html",{encoding:"utf-8"});
+    response.send(page);
+})
+
+app.post("/upload",upload.single('logo'),function(request,response){
+    response.send({retCode:0});
+})
+
 
 app.post("/",function(req,res){
     let params = req.body;
